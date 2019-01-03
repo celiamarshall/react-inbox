@@ -24,7 +24,7 @@ class Message extends Component {
         <div className="col-xs-1">
           <div className="row">
             <div className="col-xs-2">
-              <input type="checkbox" checked={!!this.state.selected} onChange={() => this.handleCheck(this.props.id)}/>
+              <input type="checkbox" checked={!!this.state.selected} onChange={this.handleCheck}/>
             </div>
             <div className="col-xs-2">
               <i className={`star fa ${this.props.starred ? 'fa-star' : 'fa-star-o'}`} onClick={() => this.props.handleStar(this.props.id)}></i>

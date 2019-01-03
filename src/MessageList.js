@@ -43,6 +43,10 @@ class MessageList extends Component {
       .catch()
   }
 
+  handleBulkSelect = () => {
+    
+  }
+
   render() {
     return (
       <div>
