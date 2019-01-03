@@ -17,6 +17,12 @@ class MessageList extends Component {
     this.getMessages()
   }
 
+  handleToggleSelected = (id) => {
+    this.setState({
+      messages: this.state.messages.map(message => message.id === id ? {...message, selected:!message.selected} : message)
+    })
+  }
+
   getMessages = () => {
     axios.get('http://localhost:8082/api/messages')
       .then((response) => {
@@ -36,6 +42,8 @@ class MessageList extends Component {
   }
 
   handleMarkAsRead = (idsArray) => {
+    const selected = this.state.messages.filter(message => message.selected).map(message => message.id)
+    console.log(selected) // <-selected here
     axios.patch('http://localhost:8082/api/messages', { command: 'read', read: true, messageIds: `${idsArray}` })
       .then(() => {
         this.getMessages()
@@ -58,6 +66,8 @@ class MessageList extends Component {
             key={message.id}
             {...message}
             handleStar={this.handleStar}
+            handleToggleSelected={this.handleToggleSelected}
+
           />
         })}
       </div>
