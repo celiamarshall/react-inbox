@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ToolBar from './ToolBar'
 import MessageList from './MessageList'
 
 
