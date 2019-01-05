@@ -3,7 +3,8 @@ import Label from './Label'
 
 function Message(props) {
   return (
-    <div className={`row message ${props.read ? 'read' : 'unread'} ${props.selected ? 'selected' : null}`}>
+    <div>
+    <div className={`row message ${props.read ? 'read' : 'unread'} ${props.selected ? 'selected' : null}`} onClick={() => props.handleReadAMessage(props.id)}>
       <div className="col-xs-1">
         <div className="row">
           <div className="col-xs-2">
@@ -18,6 +19,17 @@ function Message(props) {
         {props.labels.map(label => < Label labelProp={label} />)}
         <a href="#">{props.subject}</a>
       </div>
+    </div>
+
+    {props.reading ?
+      <div className="row message-body">
+        <div className="col-xs-11 col-xs-offset-1">
+          {props.body}
+        </div>
+      </div>
+      :
+      null
+    }
     </div>
   )
 }

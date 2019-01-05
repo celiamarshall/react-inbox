@@ -10,7 +10,8 @@ class MessageList extends Component {
 
     this.state = {
       messages: [],
-      editingMessage: false
+      editingMessage: false,
+      readingMessage: false
     }
   }
 
@@ -122,6 +123,12 @@ class MessageList extends Component {
       })
   }
 
+  handleReadAMessage = (id) => {
+    this.setState({
+      messages: this.state.messages.map(message => message.id === id ? { ...message, reading: !message.reading } : message)
+    })
+  }
+
   render() {
     return (
       <div>
@@ -146,6 +153,7 @@ class MessageList extends Component {
             {...message}
             handleStar={this.handleStar}
             handleToggleSelected={this.handleToggleSelected}
+            handleReadAMessage={this.handleReadAMessage}
             />
         })}
       </div>
