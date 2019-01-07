@@ -11,7 +11,8 @@ class MessageList extends Component {
     this.state = {
       messages: [],
       editingMessage: false,
-      readingMessage: false
+      readingMessage: false,
+      selected: {}
     }
   }
 
@@ -20,9 +21,20 @@ class MessageList extends Component {
   }
 
   handleToggleSelected = (id) => {
-    this.setState({
-      messages: this.state.messages.map(message => message.id === id ? { ...message, selected: !message.selected } : message)
-    })
+    let selected = {}
+    if (this.state.selected.hasOwnProperty.id) {
+      selected = Object.keys(this.state.selected).reduce((acc, ele) => {
+        return ele === id ? { ...acc, [id]: !this.state.selected[id]} : { ...acc, [id]: true }
+      }, {})
+    }
+    else {
+      selected = { ...this.state.selected, [id]: !this.state.selected[id] }
+    }
+    this.setState({ selected })
+  }
+
+  isSelected = (id) => {
+    return this.state.selected[id] || false
   }
 
   getMessages = () => {
@@ -43,12 +55,12 @@ class MessageList extends Component {
     .catch()
   }
   
-  getSelectedIds = (messages) => {
-    return messages.filter(message => message.selected).map(message => message.id)
+  getSelectedIds = () => {
+    return Object.keys(this.state.selected).filter(id => this.state.selected[id] === true)
   }
 
   patch = (command, bodyKey = null, bodyValue = null ) => {
-    const selected = this.getSelectedIds(this.state.messages)
+    const selected = this.getSelectedIds()
     axios.patch('http://localhost:8082/api/messages', { command, messageIds: selected, [bodyKey]: bodyValue })
     .then(() => {
       this.getMessages()
@@ -57,21 +69,17 @@ class MessageList extends Component {
   }
 
   handleBulkSelect = () => {
-    const selected = this.getSelectedIds(this.state.messages)
-
-    if (selected.length === this.state.messages.length) {
+    if (this.state.selected.length === this.state.messages.length) {
       this.setState({
-        messages: this.state.messages.map(message => {
-          return { ...message, selected: false }
-        })
+        selected: {}
       })
     }
 
     else {
+      const selected = this.state.selected
+      this.state.messages.forEach(message => selected[message.id] = true)
       this.setState({
-        messages: this.state.messages.map(message => {
-          return { ...message, selected: true }
-        })
+        selected
       })
     }
   }
@@ -102,7 +110,7 @@ class MessageList extends Component {
   }
 
   countSelected = () => {
-    const selected = this.getSelectedIds(this.state.messages)
+    const selected = this.getSelectedIds()
     if (selected.length === this.state.messages.length) return 'all'
     else { return selected.length }
   }
@@ -151,6 +159,7 @@ class MessageList extends Component {
           return <Message
             key={message.id}
             {...message}
+            selectedMessage={this.isSelected(message.id)}
             handleStar={this.handleStar}
             handleToggleSelected={this.handleToggleSelected}
             handleReadAMessage={this.handleReadAMessage}
