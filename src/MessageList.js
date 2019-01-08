@@ -69,7 +69,9 @@ class MessageList extends Component {
   }
 
   handleBulkSelect = () => {
-    if (this.state.selected.length === this.state.messages.length) {
+    const selected = this.getSelectedIds()
+
+    if (selected.length === this.state.messages.length) {
       this.setState({
         selected: {}
       })
